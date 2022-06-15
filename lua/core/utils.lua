@@ -260,6 +260,7 @@ function doomnvim.update()
       end,
     })
     :sync()
+    vim.cmd("PackerSync")
 end
 
 return doomnvim
