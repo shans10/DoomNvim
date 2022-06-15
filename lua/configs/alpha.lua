@@ -44,7 +44,7 @@ if status_ok then
           alpha_button("LDR f o", "  Recent Files  "),
           alpha_button("LDR f n", "  New File  "),
           alpha_button("LDR   P", "  Projects  "),
-          alpha_button("LDR   u", "  User Configuration  "),
+          alpha_button("LDR   U", "  User Configuration  "),
         },
         opts = { spacing = 1 },
       },
