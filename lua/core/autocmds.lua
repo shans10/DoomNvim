@@ -82,7 +82,7 @@ if is_available "feline.nvim" then
     desc = "Reload feline on colorscheme change",
     group = "feline_setup",
     callback = function()
-      require("configs.feline").config()
+      require "configs.feline"
     end,
   })
 end
@@ -119,7 +119,7 @@ cmd("FileType", {
   command = "nnoremap <silent> <buffer> q :close<CR>",
 })
 
--- Create a command to update DoomVim
+-- Create a command to update DoomNvim
 create_command("DoomUpdate", doomnvim.update, { desc = "Update DoomNvim" })
 
 -- Create a command to toggle URL highlight
