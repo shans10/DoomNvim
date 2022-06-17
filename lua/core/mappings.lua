@@ -247,8 +247,8 @@ if is_available "telescope.nvim" then
     require("telescope.builtin").find_files()
   end, { desc = "Search files" })
   map("n", "<leader>fF", function()
-    require("telescope.builtin").find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git' }})
-  end, { desc = "Search files including hidden" })
+    require("telescope.builtin").find_files { hidden = true, no_ignore = true }
+  end, { desc = "Search all files" })
   map("n", "<leader>fo", function()
     require("telescope.builtin").oldfiles()
   end, { desc = "Show recently opened files" })
@@ -294,6 +294,7 @@ if is_available "telescope.nvim" then
   map("n", "<leader>st", function()
     require("telescope.builtin").live_grep()
   end, { desc = "Search text" })
+
   -- Project
   if is_available "project.nvim" then
     -- Standalone
