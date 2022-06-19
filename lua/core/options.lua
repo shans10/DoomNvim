@@ -1,9 +1,3 @@
-local colorscheme = doomnvim.user_plugin_opts("colorscheme", nil, false)
-vim.api.nvim_command(
-  "colorscheme "
-    .. (vim.tbl_contains(vim.fn.getcompletion("", "color"), colorscheme) and colorscheme or "default_theme")
-)
-
 doomnvim.vim_opts(doomnvim.user_plugin_opts("options", {
   opt = {
     backspace = vim.opt.backspace + { "nostop" }, -- Don't stop backspace at insert
@@ -66,3 +60,9 @@ doomnvim.vim_opts(doomnvim.user_plugin_opts("options", {
     loaded_vimballPlugin = true, -- disable vimball
   },
 }))
+
+local colorscheme = doomnvim.user_plugin_opts("colorscheme", nil, false)
+vim.api.nvim_command(
+  "colorscheme "
+    .. (vim.tbl_contains(vim.fn.getcompletion("", "color"), colorscheme) and colorscheme or "default_theme")
+)

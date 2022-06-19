@@ -114,7 +114,7 @@ if is_available "aerial.nvim" then
 end
 
 -- ToggleTerm
-if is_available "nvim-toggleterm.lua" then
+if is_available "toggleterm.nvim" then
   local toggle_term_cmd = doomnvim.toggle_term_cmd
   -- Git
   map("n", "<leader>gg", function()

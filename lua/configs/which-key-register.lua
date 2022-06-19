@@ -56,7 +56,7 @@ if status_ok then
   end
 
   -- ToggleTerm
-  if is_available "nvim-toggleterm.lua" then
+  if is_available "toggleterm.nvim" then
     -- Git
     init_table("n", "<leader>", "g")
 

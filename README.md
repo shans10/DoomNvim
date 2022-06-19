@@ -25,6 +25,7 @@ Visit their official github page for support and configuration.
 
 - [Nerd Fonts](https://www.nerdfonts.com/font-downloads)
 - [Neovim 0.7+](https://github.com/neovim/neovim/releases/tag/v0.7.0)
+- [xclip](https://github.com/astrand/xclip) - (Linux only) xclip is necessary for the clipboard integration with the system clipboard
 - Terminal with true color support (for the default theme, otherwise it is dependent on the theme you are using)
 - Optional Requirements:
   - [ripgrep](https://github.com/BurntSushi/ripgrep) - live grep telescope search (`<leader>fw`)
@@ -51,9 +52,30 @@ git clone https://github.com/shans10/DoomNvim.git ~/AppData/Local/nvim
 nvim +PackerSync
 ```
 
+## Basic Setup
+
+#### Install LSP
+
+Enter `:LspInstall` followed by the name of the server you want to install<br>
+Example: `:LspInstall pyright`
+
+#### Install language parser
+
+Enter `:TSInstall` followed by the name of the language you want to install<br>
+Example: `:TSInstall python`
+
+#### Manage plugins
+
+Run `:PackerClean` to remove any disabled or unused plugins<br>
+Run `:PackerSync` to update and clean plugins<br>
+
+#### Update AstroNvim
+
+Run `:DoomUpdate` to get the latest updates from the repository<br>
+
 ## Credit
 - [AstroNvim](https://github.com/AstroNvim/AstroNvim)
 
-**NOTE:** 
+**NOTE:**
 - For adding personal configuration check *user_example/init.lua* and paste it in *user/init.lua*.
 - Doom Neovim is a temporary name based on the alpha-dashboard theme that I like until I find a better name for it.
