@@ -4,12 +4,7 @@ if status_ok then
 
   doomnvim.conditional_func(telescope.load_extension, pcall(require, "notify"), "notify")
   doomnvim.conditional_func(telescope.load_extension, pcall(require, "aerial"), "aerial")
-  doomnvim.conditional_func(telescope.load_extension, pcall(require, "project_nvim"), "projects")
-
-  -- local project_present, _ = pcall(require, "project_nvim")
-  -- if project_present then
-  --   telescope.load_extension "projects"
-  -- end
+  doomnvim.conditional_func(telescope.load_extension, pcall(require, "project"), "projects")
 
   telescope.setup(doomnvim.user_plugin_opts("plugins.telescope", {
     defaults = {
