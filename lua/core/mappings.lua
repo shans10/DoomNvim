@@ -9,14 +9,12 @@ map("", "<Space>", "<Nop>") -- disable space because leader
 -- Standard Operations
 map("n", "<leader>.", "<cmd>cd %:p:h<cr>", { desc = "Change CWD to focused file" })
 map("n", "<leader>h", "<cmd>nohlsearch<cr>", { desc = "Clear search highlight" })
-map("n", "<leader>P", "<cmd>Telescope Projects", { desc = "Projects" })
 map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 map("n", "<leader>u", function()
   doomnvim.toggle_url_match()
 end, { desc = "Toggle URL Highlights" })
 map("n", "<leader>U", "<cmd>exe \"edit\" stdpath(\"config\").\"/lua/user/init.lua\"<cr>", { desc = "Load user configuration" })
 map("n", "<leader>w", "<cmd>w<cr>", { desc = "Write" })
-map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
 map("n", "gx", function()
   doomnvim.url_opener()
 end, { desc = "Open the file under cursor with system app" })
@@ -38,13 +36,16 @@ if is_available "nvim-lsp-installer" then
 end
 
 -- File Standalone Keybindings
-map("n", "<leader>fi", "gg=G", { desc = "Indent whole file" })
+map("n", "<leader>fa", "ggVG", { desc = "Select all" })
+map("n", "<leader>fi", "gg=G", { desc = "Indent all" })
 map("n", "<leader>fn", "<cmd>enew<cr>", { desc = "New File" })
-map("n", "<leader>fp", "1<C-g>", { desc = "Show full file path" })
-map("n", "<leader>fr", "<cmd>e<cr>", { desc = "Refresh file" })
-map("n", "<leader>fR", "<cmd>e!<cr>", { desc = "Refresh file with unsaved changes" })
-map("n", "<leader>fs", "<cmd>w<cr>", { desc = "Save file" })
-map("n", "<leader>fS", "ggVG", { desc = "Select all" })
+map("n", "<leader>fp", "1<C-g>", { desc = "Show full path" })
+map("n", "<leader>fr", "<cmd>e<cr>", { desc = "Refresh" })
+map("n", "<leader>fR", "<cmd>e!<cr>", { desc = "Refresh unsaved" })
+map("n", "<leader>fs", "<cmd>w<cr>", { desc = "Save" })
+if is_available "suda.vim" then
+  map("n", "<leader>fS", "<cmd>SudaWrite<cr>", { desc = "Save as root" })
+end
 
 -- Buffer Standalone Keybindings
 map("n", "<leader>bn", "<cmd>bn<cr>", { desc = "Next buffer" })
@@ -55,24 +56,24 @@ if is_available "bufdelete.nvim" then
   map("n", "<leader>c", "<cmd>Bdelete<cr>", { desc = "Close buffer" })
 
   -- Buffer
-  map("n", "<leader>bd", "<cmd>Bdelete<cr>", { desc = "Delete buffer" })
-  map("n", "<leader>bD", "<cmd>Bdelete!<cr>", { desc = "Delete buffer with unsaved changes" })
+  map("n", "<leader>bd", "<cmd>Bdelete<cr>", { desc = "Delete" })
+  map("n", "<leader>bD", "<cmd>Bdelete!<cr>", { desc = "Delete unsaved" })
 
   -- File
-  map("n", "<leader>fc", "<cmd>Bdelete<cr>", { desc = "Close file" })
-  map("n", "<leader>fC", "<cmd>Bdelete!<cr>", { desc = "Close file with unsaved changes" })
+  map("n", "<leader>fc", "<cmd>Bdelete<cr>", { desc = "Close" })
+  map("n", "<leader>fC", "<cmd>Bdelete!<cr>", { desc = "Close unsaved" })
 
   -- Standalone(If bufdelete is not installed)
 else
   map("n", "<leader>c", "<cmd>bdelete<cr>", { desc = "Close buffer" })
 
   -- Buffer
-  map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete buffer" })
-  map("n", "<leader>bD", "<cmd>bdelete!<cr>", { desc = "Delete buffer with unsaved changes" })
+  map("n", "<leader>bd", "<cmd>bdelete<cr>", { desc = "Delete" })
+  map("n", "<leader>bD", "<cmd>bdelete!<cr>", { desc = "Delete unsaved" })
 
   -- File
-  map("n", "<leader>fc", "<cmd>bdelete<cr>", { desc = "Close file" })
-  map("n", "<leader>fC", "<cmd>bdelete!<cr>", { desc = "Close file with unsaved changes" })
+  map("n", "<leader>fc", "<cmd>bdelete<cr>", { desc = "Close" })
+  map("n", "<leader>fC", "<cmd>bdelete!<cr>", { desc = "Close unsaved" })
 end
 
 -- NvimTree
@@ -98,7 +99,13 @@ end
 if is_available "Comment.nvim" then
   map("n", "<leader>/", function()
     require("Comment.api").toggle_current_linewise()
-  end, { desc = "Toggle comment line" })
+  end, { desc = "Comment line" })
+  map(
+    "v",
+    "<leader>/",
+    "<esc><cmd>lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<cr>",
+    { desc = "Toggle comment line" }
+  )
 end
 
 -- SymbolsOutline(Aerial)
@@ -167,7 +174,7 @@ if is_available "gitsigns.nvim" then
   end, { desc = "View git diff" })
 end
 
--- SmartSplits
+-- Smart Splits
 if is_available "smart-splits.nvim" then
   -- Better window navigation
   map("n", "<C-h>", function()
@@ -247,7 +254,7 @@ if is_available "telescope.nvim" then
     require("telescope.builtin").find_files()
   end, { desc = "Search files" })
   map("n", "<leader>fF", function()
-    require("telescope.builtin").find_files { hidden = true, no_ignore = true }
+    require("telescope.builtin").find_files({ find_command = {'rg', '--files', '--hidden', '-g', '!.git'} })
   end, { desc = "Search all files" })
   map("n", "<leader>fo", function()
     require("telescope.builtin").oldfiles()
@@ -294,6 +301,13 @@ if is_available "telescope.nvim" then
   map("n", "<leader>st", function()
     require("telescope.builtin").live_grep()
   end, { desc = "Search text" })
+  map("n", "<leader>sT", function()
+    require("telescope.builtin").live_grep {
+      additional_args = function(args)
+        return vim.list_extend(args, { "--hidden", "--no-ignore", "-g", "!.git" })
+      end,
+    }
+  end, { desc = "Search text in all files" })
 
   -- Project
   if is_available "project.nvim" then
@@ -330,11 +344,6 @@ map("i", "<C-s>", "<Esc><cmd>w<cr>", { desc = "Save file" })
 -- Stay in indent mode
 map("v", "<", "<gv", { desc = "Unindent line" })
 map("v", ">", ">gv", { desc = "Indent line" })
-
--- Comment
-if is_available "Comment.nvim" then
-  map("v", "<leader>/", "<esc><cmd>lua require('Comment.api').toggle_linewise_op(vim.fn.visualmode())<cr>", { desc = "Toggle comment line" })
-end
 
 --- TERMINAL MODE ---
 --
