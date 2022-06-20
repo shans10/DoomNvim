@@ -348,9 +348,9 @@ map("v", ">", ">gv", { desc = "Indent line" })
 --- TERMINAL MODE ---
 --
 -- Improved Terminal Mappings
-map("t", "<esc>", "<C-\\>", { desc = "Terminal normal mode" })
-map("t", "jj", "<C-\\>", { desc = "Terminal normal mode" })
-map("t", "<A-h>", "<c-\\><c-w>h", { desc = "Terminal left window navigation" })
-map("t", "<A-j>", "<c-\\><c-w>j", { desc = "Terminal down window navigation" })
-map("t", "<A-k>", "<c-\\><c-w>k", { desc = "Terminal up window navigation" })
-map("t", "<A-l>", "<c-\\><c-w>l", { desc = "Terminal right window naviation" })
+map("t", "<esc>", "<C-\\><C-n>", { desc = "Terminal normal mode" })
+map("t", "jj", "<C-\\><C-n>", { desc = "Terminal normal mode" })
+map("t", "<A-h>", "<c-\\><c-n><c-w>h", { desc = "Terminal left window navigation" })
+map("t", "<A-j>", "<c-\\><c-n><c-w>j", { desc = "Terminal down window navigation" })
+map("t", "<A-k>", "<c-\\><c-n><c-w>k", { desc = "Terminal up window navigation" })
+map("t", "<A-l>", "<c-\\><c-n><c-w>l", { desc = "Terminal right window naviation" })
