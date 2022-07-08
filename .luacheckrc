@@ -2,6 +2,7 @@
 globals = {
   "PACKER_BOOTSTRAP",
   "doomnvim",
+  "doomnvim_installation",
   "vim",
   "C",
   "packer_plugins",

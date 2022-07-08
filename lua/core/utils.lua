@@ -2,10 +2,15 @@ _G.doomnvim = {}
 local stdpath = vim.fn.stdpath
 local tbl_insert = table.insert
 
-local supported_configs = {
-  stdpath "config",
-  stdpath "config" .. "/../doomnvim",
-}
+doomnvim.install = doomnvim_installation or { home = stdpath "config" }
+
+local path_avail, path = pcall(require, "plenary/path")
+local doomnvim_config = nil
+if path_avail then
+  doomnvim_config = path:new(stdpath "config"):parent() .. "/doomnvim"
+  vim.opt.rtp:append(doomnvim_config)
+end
+local supported_configs = { doomnvim.install.home, doomnvim_config }
 
 local function load_module_file(module)
   local found_module = nil
@@ -27,7 +32,7 @@ local function load_module_file(module)
 end
 
 doomnvim.user_settings = load_module_file "user.init"
-doomnvim.default_compile_path = stdpath "config" .. "/lua/packer_compiled.lua"
+doomnvim.default_compile_path = stdpath "data" .. "/packer_compiled.lua"
 doomnvim.user_terminals = {}
 doomnvim.url_matcher =
   "\\v\\c%(%(h?ttps?|ftp|file|ssh|git)://|[a-z]+[@][a-z]+[.][a-z]+:)%([&:#*@~%_\\-=?!+;/0-9a-z]+%(%([.;/?]|[.][.]+)[&:#*@~%_\\-=?!+/0-9a-z]+|:\\d+|,%(%(%(h?ttps?|ftp|file|ssh|git)://|[a-z]+[@][a-z]+[.][a-z]+:)@![0-9a-z]+))*|\\([&:#*@~%_\\-=?!+;/.0-9a-z]*\\)|\\[[&:#*@~%_\\-=?!+;/.0-9a-z]*\\]|\\{%([&:#*@~%_\\-=?!+;/.0-9a-z]*|\\{[&:#*@~%_\\-=?!+;/.0-9a-z]*})\\})+"
