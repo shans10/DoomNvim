@@ -156,6 +156,12 @@ local config = {
     servers = {
       -- "pyright"
     },
+    -- easily add or disable built in mappings added during LSP attaching
+    mappings = {
+      n = {
+        -- ["<leader>lf"] = false -- disable formatting keymap
+      },
+    },
     -- add to the server on_attach function
     -- on_attach = function(client, bufnr)
     -- end,
@@ -188,22 +194,21 @@ local config = {
     underline = true,
   },
 
+  mappings = {
+    -- first key is the mode
+    n = {
+      -- second key is the lefthand side of the map
+      ["<C-s>"] = { ":w!<cr>", desc = "Save File" },
+    },
+    t = {
+      -- setting a mapping to false will disable it
+      -- ["<esc>"] = false,
+    },
+  },
+
   -- This function is run last
-  -- good place to configure mappings and vim options
+  -- good place to configure augroups/autocommands and custom filetypes
   polish = function()
-    --- SET OPTIONS ---
-    --
-    -- Render tabs/trailing spaces
-    vim.opt.listchars:append({ tab = '› ', trail = '•', extends = '#', nbsp = '.' })
-
-    -- Automatically go to next line
-    vim.opt.whichwrap:append "<,>[,],h,l"
-
-    --- SET KEYBINDINGS ---
-    --
-    -- ForceWrite
-    vim.keymap.set("n", "<C-s>", ":w!<CR>")
-
     --- SET AUTOCOMMANDS ---
     --
     -- Explorer in sessions
@@ -224,7 +229,8 @@ local config = {
       command = "source <afile> | PackerSync",
     })
 
-    -- Set up custom filetypes
+    --- SET CUSTOM FILETYPES ---
+    --
     -- vim.filetype.add {
     --   extension = {
     --     foo = "fooscript",
