@@ -1,4 +1,5 @@
 local is_available = doomnvim.is_available
+local user_plugin_opts = doomnvim.user_plugin_opts
 local cmd = vim.api.nvim_create_autocmd
 local augroup = vim.api.nvim_create_augroup
 local create_command = vim.api.nvim_create_user_command
@@ -9,9 +10,7 @@ cmd({ "VimEnter", "FileType", "BufEnter", "WinEnter" }, {
   desc = "URL Highlighting",
   group = "highlighturl",
   pattern = "*",
-  callback = function()
-    doomnvim.set_url_match()
-  end,
+  callback = function() doomnvim.set_url_match() end,
 })
 
 -- Disable tabline and statusline in alpha-dashboard buffer
@@ -27,9 +26,7 @@ if is_available "alpha-nvim" then
         vim.opt.showtabline = 0
         cmd("BufUnload", {
           pattern = "<buffer>",
-          callback = function()
-            vim.opt.showtabline = prev_showtabline
-          end,
+          callback = function() vim.opt.showtabline = prev_showtabline end,
         })
       end,
     })
@@ -43,9 +40,7 @@ if is_available "alpha-nvim" then
       vim.opt.laststatus = 0
       cmd("BufUnload", {
         pattern = "<buffer>",
-        callback = function()
-          vim.opt.laststatus = prev_status
-        end,
+        callback = function() vim.opt.laststatus = prev_status end,
       })
     end,
   })
@@ -67,9 +62,7 @@ if is_available "alpha-nvim" then
             end
           end
         end
-        if not should_skip then
-          alpha.start(true)
-        end
+        if not should_skip then alpha.start(true) end
       end
     end,
   })
@@ -118,6 +111,20 @@ cmd("FileType", {
   desc = "Close non-essential splits with 'q'",
   pattern = "qf,help,man",
   command = "nnoremap <silent> <buffer> q :close<CR>",
+})
+
+-- Add global API for setting highlight groups for any theme
+augroup("doomnvim_highlights", { clear = true })
+cmd({ "VimEnter", "ColorScheme" }, {
+  desc = "Load custom highlights from user configuration",
+  group = "doomnvim_highlights",
+  callback = function()
+    if vim.g.colors_name then
+      for group, spec in pairs(user_plugin_opts("highlights." .. vim.g.colors_name)) do
+        vim.api.nvim_set_hl(0, group, spec)
+      end
+    end
+  end,
 })
 
 -- Create a command to update DoomNvim

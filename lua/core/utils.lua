@@ -4,22 +4,15 @@ local tbl_insert = table.insert
 local map = vim.keymap.set
 
 doomnvim.install = doomnvim_installation or { home = stdpath "config" }
-
-local path_avail, path = pcall(require, "plenary/path")
-local doomnvim_config = nil
-if path_avail then
-  doomnvim_config = path:new(stdpath "config"):parent() .. "/doomnvim"
-  vim.opt.rtp:append(doomnvim_config)
-end
-local supported_configs = { doomnvim.install.home, doomnvim_config }
+doomnvim.install.config = stdpath("config"):gsub("nvim$", "doomnvim")
+vim.opt.rtp:append(doomnvim.install.config)
+local supported_configs = { doomnvim.install.home, doomnvim.install.config }
 
 local function load_module_file(module)
   local found_module = nil
   for _, config_path in ipairs(supported_configs) do
     local module_path = config_path .. "/lua/" .. module:gsub("%.", "/") .. ".lua"
-    if vim.fn.filereadable(module_path) == 1 then
-      found_module = module_path
-    end
+    if vim.fn.filereadable(module_path) == 1 then found_module = module_path end
   end
   if found_module then
     local status_ok, loaded_module = pcall(require, module)
@@ -52,9 +45,7 @@ local function func_or_extend(overrides, default, extend)
 end
 
 function doomnvim.conditional_func(func, condition, ...)
-  if (condition == nil and true or condition) and type(func) == "function" then
-    return func(...)
-  end
+  if (condition == nil and true or condition) and type(func) == "function" then return func(...) end
 end
 
 function doomnvim.notify(msg, type, opts)
@@ -65,15 +56,13 @@ local function user_setting_table(module)
   local settings = doomnvim.user_settings or {}
   for tbl in string.gmatch(module, "([^%.]+)") do
     settings = settings[tbl]
-    if settings == nil then
-      break
-    end
+    if settings == nil then break end
   end
   return settings
 end
 
 function doomnvim.initialize_packer()
-  local packer_avail, packer = pcall(require, "packer")
+  local packer_avail, _ = pcall(require, "packer")
   if not packer_avail then
     local packer_path = stdpath "data" .. "/site/pack/packer/start/packer.nvim"
     vim.fn.delete(packer_path, "rf")
@@ -87,12 +76,19 @@ function doomnvim.initialize_packer()
     }
     doomnvim.echo { { "Initializing Packer...\n\n" } }
     vim.cmd "packadd packer.nvim"
-    packer_avail, packer = pcall(require, "packer")
-    if not packer_avail then
-      vim.api.nvim_err_writeln("Failed to load packer at:" .. packer_path .. "\n\n" .. packer)
+    packer_avail, _ = pcall(require, "packer")
+    if not packer_avail then vim.api.nvim_err_writeln("Failed to load packer at:" .. packer_path) end
+  end
+  if packer_avail then
+    local run_me, _ = loadfile(
+      doomnvim.user_plugin_opts("plugins.packer", { compile_path = doomnvim.default_compile_path }).compile_path
+    )
+    if run_me then
+      run_me()
+    else
+      doomnvim.echo { { "Please run " }, { ":PackerSync", "Title" } }
     end
   end
-  return packer
 end
 
 function doomnvim.vim_opts(options)
@@ -104,29 +100,12 @@ function doomnvim.vim_opts(options)
 end
 
 function doomnvim.user_plugin_opts(module, default, extend, prefix)
-  if extend == nil then
-    extend = true
-  end
+  if extend == nil then extend = true end
   default = default or {}
   local user_settings = load_module_file((prefix or "user") .. "." .. module)
-  if user_settings == nil and prefix == nil then
-    user_settings = user_setting_table(module)
-  end
-  if user_settings ~= nil then
-    default = func_or_extend(user_settings, default, extend)
-  end
+  if user_settings == nil and prefix == nil then user_settings = user_setting_table(module) end
+  if user_settings ~= nil then default = func_or_extend(user_settings, default, extend) end
   return default
-end
-
-function doomnvim.compiled()
-  local run_me, _ = loadfile(
-    doomnvim.user_plugin_opts("plugins.packer", { compile_path = doomnvim.default_compile_path }).compile_path
-  )
-  if run_me then
-    run_me()
-  else
-    doomnvim.echo { { "Please run " }, { ":PackerSync", "Title" } }
-  end
 end
 
 function doomnvim.url_opener()
@@ -142,9 +121,7 @@ end
 -- term_details can be either a string for just a command or
 -- a complete table to provide full access to configuration when calling Terminal:new()
 function doomnvim.toggle_term_cmd(term_details)
-  if type(term_details) == "string" then
-    term_details = { cmd = term_details, hidden = true }
-  end
+  if type(term_details) == "string" then term_details = { cmd = term_details, hidden = true } end
   local term_key = term_details.cmd
   if vim.v.count > 0 and term_details.count == nil then
     term_details.count = vim.v.count
@@ -173,15 +150,11 @@ function doomnvim.get_user_cmp_source(source)
     buffer = 500,
     path = 250,
   })[source.name]
-  if priority then
-    source.priority = priority
-  end
+  if priority then source.priority = priority end
   return source
 end
 
-function doomnvim.add_user_cmp_source(source)
-  doomnvim.add_cmp_source(doomnvim.get_user_cmp_source(source))
-end
+function doomnvim.add_user_cmp_source(source) doomnvim.add_cmp_source(doomnvim.get_user_cmp_source(source)) end
 
 function doomnvim.null_ls_providers(filetype)
   local registered = {}
@@ -204,9 +177,7 @@ end
 
 function doomnvim.alpha_button(sc, txt)
   local sc_ = sc:gsub("%s", ""):gsub("LDR", "<leader>")
-  if vim.g.mapleader then
-    sc = sc:gsub("LDR", vim.g.mapleader == " " and "SPC" or vim.g.mapleader)
-  end
+  if vim.g.mapleader then sc = sc:gsub("LDR", vim.g.mapleader == " " and "SPC" or vim.g.mapleader) end
   return {
     type = "button",
     val = txt,
@@ -227,9 +198,7 @@ function doomnvim.alpha_button(sc, txt)
   }
 end
 
-function doomnvim.is_available(plugin)
-  return packer_plugins ~= nil and packer_plugins[plugin] ~= nil
-end
+function doomnvim.is_available(plugin) return packer_plugins ~= nil and packer_plugins[plugin] ~= nil end
 
 function doomnvim.set_mappings(map_table, base)
   for mode, maps in pairs(map_table) do
@@ -250,17 +219,13 @@ end
 
 function doomnvim.delete_url_match()
   for _, match in ipairs(vim.fn.getmatches()) do
-    if match.group == "HighlightURL" then
-      vim.fn.matchdelete(match.id)
-    end
+    if match.group == "HighlightURL" then vim.fn.matchdelete(match.id) end
   end
 end
 
 function doomnvim.set_url_match()
   doomnvim.delete_url_match()
-  if vim.g.highlighturl_enabled then
-    vim.fn.matchadd("HighlightURL", doomnvim.url_matcher, 15)
-  end
+  if vim.g.highlighturl_enabled then vim.fn.matchadd("HighlightURL", doomnvim.url_matcher, 15) end
 end
 
 function doomnvim.toggle_url_match()

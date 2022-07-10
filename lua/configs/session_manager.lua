@@ -1,6 +1,5 @@
 local status, session_manager = pcall(require, "session_manager")
-if status then
-  session_manager.setup(doomnvim.user_plugin_opts("plugins.session_manager", {
-    autoload_mode = "Disabled",
-  }))
-end
+if not status_ok then return end
+session_manager.setup(doomnvim.user_plugin_opts("plugins.session_manager", {
+  autoload_mode = "Disabled",
+}))

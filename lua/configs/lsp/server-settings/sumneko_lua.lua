@@ -9,6 +9,7 @@ return {
         library = {
           [vim.fn.expand "$VIMRUNTIME/lua"] = true,
           [doomnvim.install.home .. "/lua"] = true,
+          [doomnvim.install.config .. "/lua"] = true,
         },
       },
     },

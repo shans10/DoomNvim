@@ -1,94 +1,93 @@
 local status_ok, which_key = pcall(require, "which-key")
-if status_ok then
-  local is_available = doomnvim.is_available
-  local user_plugin_opts = doomnvim.user_plugin_opts
-  local mappings = {
-    n = {
-      ["<leader>"] = {
-        f = { name = "File" },
-        p = { name = "Packer" },
-        l = { name = "LSP" },
-      },
+if not status_ok then return end
+local is_available = doomnvim.is_available
+local user_plugin_opts = doomnvim.user_plugin_opts
+local mappings = {
+  n = {
+    ["<leader>"] = {
+      f = { name = "File" },
+      p = { name = "Packer" },
+      l = { name = "LSP" },
     },
-  }
+  },
+}
 
-  local extra_sections = {
-    b = "Buffer",
-    g = "Git",
-    s = "Search",
-    S = "Session",
-    t = "Terminal",
-  }
+local extra_sections = {
+  b = "Buffer",
+  g = "Git",
+  s = "Search",
+  S = "Session",
+  t = "Terminal",
+}
 
-    local function init_table(mode, prefix, idx)
-    if not mappings[mode][prefix][idx] then
-      mappings[mode][prefix][idx] = { name = extra_sections[idx] }
-    end
+local function init_table(mode, prefix, idx)
+  if not mappings[mode][prefix][idx] then
+    mappings[mode][prefix][idx] = { name = extra_sections[idx] }
   end
+end
+
+-- Buffer
+if is_available "bufferline.nvim" then
+  init_table("n", "<leader>", "b")
+end
+
+-- SessionManager
+if is_available "neovim-session-manager" then
+  -- Session
+  init_table("n", "<leader>", "S")
+
+  -- Search
+  init_table("n", "<leader>", "s")
+end
+
+-- Bufdelete
+if is_available "bufdelete.nvim" then
+
+  -- File
+  init_table("n", "<leader>", "f")
 
   -- Buffer
-  if is_available "bufferline.nvim" then
-    init_table("n", "<leader>", "b")
-  end
+  init_table("n", "<leader>", "b")
+end
 
-  -- SessionManager
-  if is_available "neovim-session-manager" then
-    -- Session
-    init_table("n", "<leader>", "S")
+-- GitSigns
+if is_available "gitsigns.nvim" then
+  init_table("n", "<leader>", "g")
+end
 
-    -- Search
-    init_table("n", "<leader>", "s")
-  end
+-- ToggleTerm
+if is_available "toggleterm.nvim" then
+  -- Git
+  init_table("n", "<leader>", "g")
 
-  -- Bufdelete
-  if is_available "bufdelete.nvim" then
+  -- Terminal
+  init_table("n", "<leader>", "t")
+end
 
-    -- File
-    init_table("n", "<leader>", "f")
+-- Telescope
+if is_available "telescope.nvim" then
+  -- Buffer
+  init_table("n", "<leader>", "b")
 
-    -- Buffer
-    init_table("n", "<leader>", "b")
-  end
+  -- Git
+  init_table("n", "<leader>", "g")
 
-  -- GitSigns
-  if is_available "gitsigns.nvim" then
-    init_table("n", "<leader>", "g")
-  end
+  -- Search
+  init_table("n", "<leader>", "s")
+end
 
-  -- ToggleTerm
-  if is_available "toggleterm.nvim" then
-    -- Git
-    init_table("n", "<leader>", "g")
-
-    -- Terminal
-    init_table("n", "<leader>", "t")
-  end
-
-  -- Telescope
-  if is_available "telescope.nvim" then
-    -- Buffer
-    init_table("n", "<leader>", "b")
-
-    -- Git
-    init_table("n", "<leader>", "g")
-
-    -- Search
-    init_table("n", "<leader>", "s")
-  end
-
-  mappings = user_plugin_opts("which-key.register_mappings", mappings)
-  -- support previous legacy notation, deprecate at some point
-  mappings.n["<leader>"] = user_plugin_opts("which-key.register_n_leader", mappings.n["<leader>"])
-  for mode, prefixes in pairs(mappings) do
-    for prefix, mapping_table in pairs(prefixes) do
-      which_key.register(mapping_table, {
-        mode = mode,
-        prefix = prefix,
-        buffer = nil,
-        silent = true,
-        noremap = true,
-        nowait = true,
-      })
-    end
+mappings = user_plugin_opts("which-key.register_mappings", mappings)
+-- support previous legacy notation, deprecate at some point
+mappings.n["<leader>"] = user_plugin_opts("which-key.register_n_leader", mappings.n["<leader>"])
+for mode, prefixes in pairs(mappings) do
+  for prefix, mapping_table in pairs(prefixes) do
+    which_key.register(mapping_table, {
+      mode = mode,
+      prefix = prefix,
+      buffer = nil,
+      silent = true,
+      noremap = true,
+      nowait = true,
+    })
   end
 end

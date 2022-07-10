@@ -1,4 +1,3 @@
-local present, indent_o_matic = pcall(require, "indent-o-matic")
-if present then
-  indent_o_matic.setup(doomnvim.user_plugin_opts "plugins.indent-o-matic")
-end
+local status_ok, indent_o_matic = pcall(require, "indent-o-matic")
+if not status_ok then return end
+indent_o_matic.setup(doomnvim.user_plugin_opts "plugins.indent-o-matic")

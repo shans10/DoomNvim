@@ -1,3 +1,6 @@
+local status_ok, bufferline = pcall(require, "bufferline")
+if not status_ok then return end
+
 local function diagnostics_indicator(_, _, diagnostics)
   local result = {}
   local symbols = { error = "", warning = "", info = "" }
@@ -10,26 +13,23 @@ local function diagnostics_indicator(_, _, diagnostics)
   return #result > 0 and result or ""
 end
 
-local status_ok, bufferline = pcall(require, "bufferline")
-if status_ok then
-  bufferline.setup(doomnvim.user_plugin_opts("plugins.bufferline", {
-    options = {
-      offsets = {
-        { filetype = "NvimTree", text = "Explorer", highlight = "PanelHeading", padding = 1 },
-        { filetype = "neo-tree", text = "Explorer", highlight = "PanelHeading", padding = 1 },
-        { filetype = "Outline", text = "", padding = 1 },
-      },
-      buffer_close_icon = "",
-      modified_icon = "",
-      close_icon = "",
-      show_close_icon = false,
-      max_name_length = 14,
-      max_prefix_length = 13,
-      tab_size = 20,
-      separator_style = "thin",
-      diagnostics = "nvim_lsp",
-      diagnostics_update_in_insert = true,
-      diagnostics_indicator = diagnostics_indicator,
+bufferline.setup(doomnvim.user_plugin_opts("plugins.bufferline", {
+  options = {
+    offsets = {
+      { filetype = "NvimTree", text = "Explorer", highlight = "PanelHeading", padding = 1 },
+      { filetype = "neo-tree", text = "Explorer", highlight = "PanelHeading", padding = 1 },
+      { filetype = "Outline", text = "", padding = 1 },
     },
-  }))
-end
+    buffer_close_icon = "",
+    modified_icon = "",
+    close_icon = "",
+    show_close_icon = false,
+    max_name_length = 14,
+    max_prefix_length = 13,
+    tab_size = 20,
+    separator_style = "thin",
+    diagnostics = "nvim_lsp",
+    diagnostics_update_in_insert = true,
+    diagnostics_indicator = diagnostics_indicator,
+  },
+}))
