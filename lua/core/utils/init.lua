@@ -48,8 +48,23 @@ function doomnvim.conditional_func(func, condition, ...)
   if (condition == nil and true or condition) and type(func) == "function" then return func(...) end
 end
 
+function doomnvim.trim_or_nil(str) return type(str) == "string" and vim.trim(str) or nil end
+
 function doomnvim.notify(msg, type, opts)
-  vim.notify(msg, type, vim.tbl_deep_extend("force", { title = "DoomNvim" }, opts or {}))
+  vim.notify(msg, type, vim.tbl_deep_extend("force", { title = "doomnvim" }, opts or {}))
+end
+
+function doomnvim.echo(messages)
+  messages = messages or { { "\n" } }
+  if type(messages) == "table" then vim.api.nvim_echo(messages, false, {}) end
+end
+
+function doomnvim.confirm_prompt(messages)
+  if messages then doomnvim.echo(messages) end
+  local confirmed = string.lower(vim.fn.input "(y/n) ") == "y"
+  doomnvim.echo()
+  doomnvim.echo()
+  return confirmed
 end
 
 local function user_setting_table(module)
@@ -233,22 +248,15 @@ function doomnvim.toggle_url_match()
   doomnvim.set_url_match()
 end
 
-function doomnvim.update()
-  (require "plenary.job")
-    :new({
-      command = "git",
-      args = { "pull", "--ff-only" },
-      cwd = stdpath "config",
-      on_exit = function(_, return_val)
-        if return_val == 0 then
-          vim.notify("Updated!", "info", doomnvim.base_notification)
-        else
-          vim.notify("Update failed! Please try pulling manually.", "error", doomnvim.base_notification)
-        end
-      end,
-    })
-    :sync()
-    vim.cmd("PackerSync")
+function doomnvim.cmd(cmd, show_error)
+  local result = vim.fn.system(cmd)
+  local success = vim.api.nvim_get_vvar "shell_error" == 0
+  if not success and (show_error == nil and true or show_error) then
+    vim.api.nvim_err_writeln("Error running command: " .. cmd .. "\nError message:\n" .. result)
+  end
+  return success and result or nil
 end
+
+require "core.utils.updater"
 
 return doomnvim
