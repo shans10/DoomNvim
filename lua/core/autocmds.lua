@@ -128,7 +128,6 @@ cmd({ "VimEnter", "ColorScheme" }, {
 })
 
 -- Create a command to update DoomNvim
--- create_command("DoomUpdate", doomnvim.update, { desc = "Update DoomNvim" })
 create_command("DoomUpdate", doomnvim.updater.update, { desc = "Update DoomNvim" })
 
 -- Create a command to toggle URL highlight
