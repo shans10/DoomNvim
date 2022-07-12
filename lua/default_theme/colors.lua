@@ -71,7 +71,7 @@ local colors = {
   woff = "#abb2bf",
   woff2 = "#abb2bf",
   zip = "#f9d71c",
-  -- md = "#519aba",
+  md = "#519aba",
 }
 
 return doomnvim.user_plugin_opts("default_theme.colors", colors)
