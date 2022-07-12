@@ -23,7 +23,7 @@ function git.remote_update(remote, url, ...) return git.cmd("remote set-url " ..
 
 function git.remote_url(remote, ...) return doomnvim.trim_or_nil(git.cmd("remote get-url " .. remote, ...)) end
 
-function git.current_version(...) return doomnvim.trim_or_nil(git.cmd("describe --tags", ...)) end
+function git.current_version(...) return doomnvim.trim_or_nil(git.cmd("describe --always", ...)) end
 
 function git.current_branch(...) return doomnvim.trim_or_nil(git.cmd("rev-parse --abbrev-ref HEAD", ...)) end
 
