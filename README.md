@@ -10,6 +10,7 @@ Visit their official github page for support and configuration.
 
 ## Features
 
+- Dashboard with Alpha[https://github.com/goolord/alpha-nvim]
 - File explorer with [Nvim-tree](https://github.com/kyazdani42/nvim-tree.lua)
 - Autocompletion with [Cmp](https://github.com/hrsh7th/nvim-cmp)
 - Git integration with [Gitsigns](https://github.com/lewis6991/gitsigns.nvim)
@@ -69,7 +70,7 @@ Example: `:TSInstall python`
 Run `:PackerClean` to remove any disabled or unused plugins<br>
 Run `:PackerSync` to update and clean plugins<br>
 
-#### Update AstroNvim
+#### Update DoomNvim
 
 Run `:DoomUpdate` to get the latest updates from the repository<br>
 
