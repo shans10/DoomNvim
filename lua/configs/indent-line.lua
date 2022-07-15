@@ -43,7 +43,6 @@ indent_blankline.setup(doomnvim.user_plugin_opts("plugins.indent_blankline", {
   },
   show_trailing_blankline_indent = false,
   use_treesitter = true,
-  char = "▏",
-  context_char = "▏",
   show_current_context = true,
+  show_current_context_start = true,
 }))
