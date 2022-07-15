@@ -6,7 +6,7 @@ Visit their official github page for support and configuration.
 ## Preview
 ![Screenshot from 2022-07-13 11-26-27](https://user-images.githubusercontent.com/28944997/178661080-46103b9b-6e80-40b1-bc95-a93bf14bbeb7.png)
 ![Screenshot from 2022-06-15 14-38-51](https://user-images.githubusercontent.com/28944997/173792097-5090a44e-379c-4594-bd80-7a6973368969.png)
-![Screenshot from 2022-06-15 14-39-57](https://user-images.githubusercontent.com/28944997/173792119-de6913a5-6f44-4283-8da9-9e6b9c22d72b.png)
+![Screenshot from 2022-07-15 23-15-09](https://user-images.githubusercontent.com/28944997/179281662-5ad10055-313d-4004-b1c8-c83ae2b032a4.png)
 
 ## Features
 
