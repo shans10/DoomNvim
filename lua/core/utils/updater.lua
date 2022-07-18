@@ -1,7 +1,7 @@
 local git = require "core.utils.git"
 local options = doomnvim.user_plugin_opts(
   "updater",
-  { remote = "origin", branch = "main", show_changelog = true }
+  { remote = "origin", branch = "main" }
 )
 
 doomnvim.updater = { options = options }
@@ -81,15 +81,6 @@ function doomnvim.updater.update()
     doomnvim.echo(cancelled_message)
     return
   else -- perform update
-    local changelog = git.get_commit_range(source, target)
-    local breaking = git.breaking_changes(changelog)
-    local breaking_prompt = { { "Update contains the following breaking changes:\n", "WarningMsg" } }
-    vim.list_extend(breaking_prompt, git.pretty_changelog(breaking))
-    vim.list_extend(breaking_prompt, { { "\nWould you like to continue?" } })
-    if #breaking > 0 and not options.skip_prompts and not doomnvim.confirm_prompt(breaking_prompt) then
-      doomnvim.echo(cancelled_message)
-      return
-    end
     local updated = attempt_update()
     if
       not updated
@@ -115,10 +106,6 @@ function doomnvim.updater.update()
       { "!\n", "Title" },
       { "Please restart and run :PackerSync.\n\n", "WarningMsg" },
     }
-    if options.show_changelog and #changelog > 0 then
-      vim.list_extend(summary, { { "Changelog:\n", "Title" } })
-      vim.list_extend(summary, git.pretty_changelog(changelog))
-    end
     doomnvim.echo(summary)
   end
 end
