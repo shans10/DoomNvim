@@ -1,7 +1,7 @@
 <h1 align="center">Doom Neovim</h1>
 
 **This is my personal configuration of [AstroNvim](https://github.com/AstroNvim/AstroNvim) with some additional keybindings and plugin changes.**
-Visit their official github page for support and configuration.
+Visit their official github page from the link above for support and configuration.
 
 ## Preview
 ![Screenshot from 2022-07-13 11-26-27](https://user-images.githubusercontent.com/28944997/178661080-46103b9b-6e80-40b1-bc95-a93bf14bbeb7.png)
